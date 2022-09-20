@@ -1,1 +1,8 @@
 // app global css in SCSS form
+.stl-dialog {
+  width: 400px;
+  max-height: calc(100vh - 48px);
+  @media (min-width: 600px) {
+    max-width: 560px;
+  }
+}
