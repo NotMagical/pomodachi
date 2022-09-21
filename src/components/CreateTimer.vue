@@ -1,14 +1,10 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin">
-      <q-form @submit="onDialogOK(timer)" autofocus>
+      <q-form @submit="onDialogOK(timer)">
         <q-card-section class="q-gutter-y-xs">
-          <q-input v-model="timer.name" label="Name" />
-          <q-input
-            v-model="timer.maxRange"
-            label="Max range"
-            placeholder="60"
-          />
+          <q-input v-model="timer.name" label="Name" autofocus />
+          <q-input v-model="timer.maxRange" label="Max range" />
           <q-input v-model="timer.minRange" label="Min range" />
           <q-input v-model="timer.skipRange" label="Skip range" />
         </q-card-section>

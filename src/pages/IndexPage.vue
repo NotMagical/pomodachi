@@ -23,7 +23,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Dialog } from 'quasar';
+import { Dialog, LocalStorage } from 'quasar';
+import { z } from 'zod';
+import { TIMER } from 'src/utils/zod-schema';
+import { tryCatch, errorPrompt } from 'src/utils/helpers';
 import ProgressIndicator from 'src/components/ProgressIndicator.vue';
 import TimerControls from 'src/components/TimerControls.vue';
 import HeaderTitle from 'src/components/HeaderTitle.vue';
@@ -67,11 +70,28 @@ const removeTimer = () => {
   instance.value = 0;
 };
 
+type Timer = z.infer<typeof TIMER>;
+const loadCollection = () =>
+  console.log('Timers:', LocalStorage.getItem('timer-collection'));
+loadCollection();
+
+const pushToCollection = (timer: Timer) => {
+  let collection: Array<Timer> = LocalStorage.getItem('timer-collection') || [];
+  collection.push(timer);
+  LocalStorage.set('timer-collection', collection);
+};
+const loadTimer = (timer: Timer) => {
+  console.log('s', timer);
+};
+
 const addTimer = () => {
   Dialog.create({
     component: CreateTimer,
-  }).onOk((timer) => {
-    console.log(timer);
+  }).onOk((res: Timer) => {
+    const [parsed, error] = tryCatch(() => TIMER.parse(res));
+    if (error) return errorPrompt('Invalid timer inputs.');
+    pushToCollection(parsed);
+    loadTimer(parsed);
   });
 };
 </script>
